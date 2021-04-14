@@ -19,6 +19,7 @@ namespace DemoTextValidation
             }
             catch(MyException e)
             {
+                // Note: for now I suggest all the problematic data should be able to SAVE, but NOT SUBMIT.
                 Console.WriteLine(e.Message);
                 validFlag = false;
             }

@@ -18,8 +18,8 @@ namespace DemoTextValidation
             var tokens2 = ValidateSingleSentence(swissGerman, "Swiss German").ToArray();
 
             // If the tokens have passed the check in previous step, then only valid token will be selected in this step.
-            var tags1 = tokens1.Where(x => x[0] == '<');
-            var tags2 = tokens2.Where(x => x[0] == '<');
+            var tags1 = tokens1.Where(x => x[0] == '<').ToArray();
+            var tags2 = tokens2.Where(x => x[0] == '<').ToArray();
             // The tokens on both size should match each other.
             // For example:
             //  (HG):   abc <Tag1> def <Tag2> gh ijk <Tag1> lm
@@ -29,6 +29,16 @@ namespace DemoTextValidation
             //  (SG):   <Tag1> <Tag2> <Tag1>
             // If they are not matched, then validation fails.
             Sanity.Requires(tags1.SequenceEqual(tags2), "Tag mismatches between High German and Swiss German.");
+
+            int nonTagTokenLength1 = tokens1.Length - tags1.Length;
+            int nonTagTokenLength2 = tokens2.Length - tags2.Length;
+
+            // The word count should not different too much.
+            // The current thrshold is:
+            //  The long sentence should not be more than 1.5 times of the short one.
+            //  Or the long sentence should not be more than 5 tokens of the short one.
+            Sanity.Requires(nonTagTokenLength1 * 1.5 >= nonTagTokenLength2 || nonTagTokenLength2 - nonTagTokenLength1 <= 5, $"Token count in Swiss German({nonTagTokenLength2}) is much less than High German({nonTagTokenLength1}).");
+            Sanity.Requires(nonTagTokenLength2 * 1.5 >= nonTagTokenLength1 || nonTagTokenLength1 - nonTagTokenLength2 <= 5, $"Token count in High German({nonTagTokenLength1}) is much less than Swiss German({nonTagTokenLength2}).");
 
             #endregion
 
