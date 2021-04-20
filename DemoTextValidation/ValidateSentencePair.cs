@@ -60,6 +60,14 @@ namespace DemoTextValidation
                     continue;
                 }
 
+                // S1/S2 are allowed.
+                // S3/4/5/6...  are invalid.
+                if(token.ToLower()=="s1"||token.ToLower()=="s2")
+                {
+                    yield return token;
+                    break;
+                }
+
                 // Digits are not allowed.
                 foreach (char c in token)
                 {
